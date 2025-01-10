@@ -13,8 +13,6 @@ import json
 @api_view(['GET','POST','DELETE'])
 
 def get(request):
-    user = "manish"
-    login(request,user)
     queryset = Task.objects.all().order_by('-pk')  # Fetch all records, ordered by descending primary key
     serializer = TaskSerializer(queryset, many=True)  # Serialize all tasks
     return Response(serializer.data) 
