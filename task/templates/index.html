@@ -42,13 +42,13 @@
 </head>
 
 <body>
-    <center class="nosifer-regular" style="margin-top: 20px;">
+    <center class="nosifer-regular" style="margin-top: 10px;">
         <h1>Task Management System</h1>
         <h6>Manish_Dhaye</h6>
     </center>
     <hr>
 
-    <div style="display: flex; gap: 30px;" class="container mt-4 poppins-medium">
+    <div style="display: flex; gap: 30px;" class="container mt-3  poppins-medium">
         <form action="" method="post" class="col-6 mx-auto card p-3 shadow-lg" style="background-color: azure;">
             {% csrf_token %}
             <center>
@@ -99,37 +99,37 @@
                 </center>
                 <hr>
                 <table class="table">
-                   <center>
-                    <thead>
-                        <tr>
-                            <th scope="col">No.</th>
-                            <th scope="col">Title</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Delete</th>
-                            <th scope="col">Update</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for task in tasks %}
-                        <tr>
-                            <th scope="row">{{forloop.counter}}</th>
-                            <td>{{task.title}}</td>
-                            <td>
-                                <a href="{% url 'update_status' task.id %}"
-                                    class="btn {% if task.status == 'Completed' %}btn-success{% else %}btn-warning{% endif %}">
-                                    {% if task.status == 'Completed' %}Completed{% else %}Ongoing{% endif %}
-                                </a>
-                            </td>
-                            <td>
-                                <a href="/delete/{{task.id}}" onclick="return confirmDelete();"
-                                    class="btn btn-danger">Delete</a>
-                            </td>
-                            <td><a href="/update/{{task.id}}" class="btn btn-success">Put</a></td>
-                        </tr>
-                        {% endfor %}
-    
-                    </tbody>
-                   </center>
+                    <center>
+                        <thead>
+                            <tr>
+                                <th scope="col">No.</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Delete</th>
+                                <th scope="col">Update</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                            <tr>
+                                <th scope="row">{{forloop.counter}}</th>
+                                <td>{{task.title}}</td>
+                                <td>
+                                    <a href="{% url 'update_status' task.id %}"
+                                        class="btn {% if task.status == 'Completed' %}btn-success{% else %}btn-warning{% endif %}">
+                                        {% if task.status == 'Completed' %}Completed{% else %}Ongoing{% endif %}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="/delete/{{task.id}}" onclick="return confirmDelete();"
+                                        class="btn btn-danger">Delete</a>
+                                </td>
+                                <td><a href="/update/{{task.id}}" class="btn btn-success">Put</a></td>
+                            </tr>
+                            {% endfor %}
+
+                        </tbody>
+                    </center>
                 </table>
             </center>
         </div>

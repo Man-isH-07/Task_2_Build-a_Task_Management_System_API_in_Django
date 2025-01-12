@@ -8,6 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from django.contrib.auth import login
 import json
+from django.contrib import messages
 
 # # Create your views here.
 @api_view(['GET','POST','DELETE'])
@@ -17,8 +18,12 @@ def get(request):
     serializer = TaskSerializer(queryset, many=True)  # Serialize all tasks
     return Response(serializer.data) 
 
+
+
+def UserInterface(request):
+     return render(request,'UserInterface.html')
+
 def home(request):
-    
     if request.method=="POST":
         data = request.POST
         title = data.get("title")
@@ -70,8 +75,10 @@ def update(request, id):  # Support partial edits
 def delete(request,id):
             queryset = Task.objects.get(id=id)
             queryset.delete()
-            return HttpResponse({ "Deleted"
+            HttpResponse({ "Deleted"
             }, status=status.HTTP_200_OK)
+            return redirect('home')
+            
  
 # View to update task status
 def update_status(request,id):

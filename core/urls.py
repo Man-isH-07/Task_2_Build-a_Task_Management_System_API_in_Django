@@ -10,5 +10,7 @@ urlpatterns = [
     path('update/<id>/', update ,name="update"),
     path('update_status/<id>/', update_status, name='update_status'),
     path('home/', home ,name="home"),
+    path('',UserInterface,name="UserInterface"),
+    
     
 ]
