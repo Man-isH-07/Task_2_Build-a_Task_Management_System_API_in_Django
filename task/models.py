@@ -1,11 +1,10 @@
 from django.db import models
-from typing import Iterable
-
-# Create your models here.
+from django.utils.timezone import now
 
 class Task(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=255)
     description = models.TextField()
-    task_type = models.CharField(max_length=100,choices=(("Official","Official"),("Normal","Normal")),default="Normal")
-    status = models.CharField(max_length=20,choices=(("Ongoing","Ongoing"),("Completed","Completed")),default="Ongoing")
-
+    task_type = models.CharField(max_length=50)
+    status = models.CharField(max_length=50, default="Ongoing")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

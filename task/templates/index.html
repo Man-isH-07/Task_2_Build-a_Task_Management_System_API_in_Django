@@ -38,6 +38,46 @@
             font-weight: 500;
             font-style: normal;
         }
+
+        .past
+        {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .scolling {
+            overflow-y: scroll;
+            max-height: 400px;
+        }
+
+        .makebtnflex a,
+        .makebtnflex button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5%;
+            border: none;
+            border-radius: 50px;
+        }
+
+        .makebtnflex a img {
+            mix-blend-mode: plus-lighter;
+            width: 25px;
+            height: 25px;
+        }
+
+        .makebtnflex button img {
+            mix-blend-mode: color-burn;
+            width: 25px;
+            height: 25px;
+            gap: 5%;
+        }
+        .makebtnflex img {
+            mix-blend-mode: color-burn;
+            width:25px;
+            height: 25px;
+            gap: 5%;
+        }
     </Style>
 </head>
 
@@ -58,12 +98,12 @@
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label"><b>Title</b></label>
                 <input type="text" name="title" class="form-control" id="exampleFormControlInput1"
-                    placeholder="Kya Kaam Hai re Baba..?">
+                    placeholder="Add Title Here....">
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label"><b>Description</b></label>
                 <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3"
-                    placeholder="Muh Se Supari Niakl Ke Baat Kr Re Baba"></textarea>
+                    placeholder="Add Description Here..."></textarea>
             </div>
 
             <label for="" class="form-label"><b>Task Type :</b></label>
@@ -82,9 +122,12 @@
 
             <hr>
 
+            {% load static %}
+
             <center>
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-success col-3">POST</button>
+                <div class="mb-3 makebtnflex">
+                    <button type="submit" class="btn btn-success col-3"><img src="{% static 'images/add.png' %}"
+                            alt="">Add Task</button>
                 </div>
 
 
@@ -94,46 +137,93 @@
 
         <div class="col-6 mx-auto card p-3 shadow-lg poppins-medium" style="background-color: azure;">
             <center>
-                <center>
-                    <h2><b>Tasks List</b></h2>
-                </center>
-                <hr>
-                <table class="table">
-                    <center>
-                        <thead>
-                            <tr>
-                                <th scope="col">No.</th>
-                                <th scope="col">Title</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Delete</th>
-                                <th scope="col">Update</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for task in tasks %}
-                            <tr>
-                                <th scope="row">{{forloop.counter}}</th>
-                                <td>{{task.title}}</td>
-                                <td>
-                                    <a href="{% url 'update_status' task.id %}"
-                                        class="btn {% if task.status == 'Completed' %}btn-success{% else %}btn-warning{% endif %}">
-                                        {% if task.status == 'Completed' %}Completed{% else %}Ongoing{% endif %}
-                                    </a>
-                                </td>
-                                <td>
-                                    <a href="/delete/{{task.id}}" onclick="return confirmDelete();"
-                                        class="btn btn-danger">Delete</a>
-                                </td>
-                                <td><a href="/update/{{task.id}}" class="btn btn-success">Put</a></td>
-                            </tr>
-                            {% endfor %}
-
-                        </tbody>
-                    </center>
-                </table>
+                <h2><b>Ongoing Tasks</b></h2>
             </center>
+            <hr>
+            <div class="scolling">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">No.</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Delete</th>
+                            <th scope="col">Update</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for task in ongoing_tasks %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ task.title }}</td>
+                            <td class="makebtnflex">
+                                <a href="{% url 'update_status' task.id %}" class="btn btn-warning">
+                                    <img src="{% static 'images/pending.png' %}" alt="Pending Icon">
+                                    Ongoing
+                                </a>
+                            </td>
+                            <td class="makebtnflex">
+                                <a href="/delete/{{ task.id }}" onclick="return confirmDelete();"
+                                    class="btn btn-danger">
+                                    <img src="{% static 'images/deleteicon.png' %}" alt="">
+                                </a>
+                            </td>
+                            <td class="makebtnflex">
+                                <a href="/update/{{ task.id }}" class="btn btn-success">
+                                    <img src="{% static 'images/edit.png' %}" alt="">
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+    <div class="col-10 mx-auto card m-4 p-3 shadow-lg poppins-medium past" style="background-color: azure;">
+        <center>
+            <h2><b>Past Completed Tasks</b></h2>
+        </center>
+        <hr>
+        <div class="scolling">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Started At</th>
+                        <th scope="col">Ended At</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in completed_tasks %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ task.title }}</td>
+                        <td>
+                            <span class="btn btn-success makebtnflex">
+                                <img src="{% static 'images/completed.png' %}" alt="Completed Icon">
+                                Completed
+                            </span>
+                        </td>
+                        <td>{{ task.created_at }}</td>
+                        <td>{{ task.updated_at }}</td>
+                        <td class="makebtnflex">
+                            <a href="/delete/{{ task.id }}" onclick="return confirmDelete();"
+                                class="btn btn-danger">
+                                <img src="{% static 'images/deleteicon.png' %}" alt="">
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 
 
     <script>
@@ -141,34 +231,28 @@
             return confirm("Are you sure you want to delete this task?");
         }
         function ChangeStatus(taskId, newStatus) {
-            // Get the CSRF token from the HTML
             const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-            // Perform an AJAX POST request to update the status
             fetch(`/update_status/${taskId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken // Include the CSRF token for Django's security
+                    'X-CSRFToken': csrftoken
                 },
-                body: JSON.stringify({ status: newStatus }) // Send the new status in the request body
+                body: JSON.stringify({ status: newStatus })
             })
-                .then(response => {
-                    if (response.ok) {
-                        // Update the button display after the request is successful
-                        const button = document.querySelector(`a[href="/update_status/${taskId}"]`);
-                        button.textContent = newStatus === 'Completed' ? 'Completed' : 'Ongoing';
-                        button.classList.toggle('btn-success', newStatus === 'Completed');
-                        button.classList.toggle('btn-warning', newStatus !== 'Completed');
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Reload the tasks dynamically
+                        location.reload();
                     } else {
-                        alert('Failed to update the task status. Please try again.');
+                        alert('Failed to update the task status.');
                     }
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while updating the task status.');
-                });
+                .catch(error => console.error('Error:', error));
         }
+
 
 
 

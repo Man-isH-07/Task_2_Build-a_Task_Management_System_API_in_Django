@@ -24,13 +24,11 @@ def UserInterface(request):
      return render(request,'UserInterface.html')
 
 def home(request):
-    if request.method=="POST":
+    if request.method == "POST":
         data = request.POST
         title = data.get("title")
         description = data.get("description")
         task_type = data.get("task_type")
-
-        print(data)
 
         Task.objects.create(
             title=title,
@@ -38,13 +36,18 @@ def home(request):
             task_type=task_type,
             status="Ongoing"
         )
-
         return redirect('/home')
 
-    queryset = Task.objects.all()
-    context = {'tasks' : queryset}
-    
-    return render(request,'index.html',context)
+    # Separate tasks into ongoing and completed lists
+    ongoing_tasks = Task.objects.filter(status="Ongoing").order_by('-id')
+    completed_tasks = Task.objects.filter(status="Completed").order_by('-id')
+
+    context = {
+        'ongoing_tasks': ongoing_tasks,
+        'completed_tasks': completed_tasks
+    }
+    return render(request, 'index.html', context)
+
 
 #Update
 
@@ -81,13 +84,21 @@ def delete(request,id):
             
  
 # View to update task status
-def update_status(request,id):
+from django.utils.timezone import now
+
+def update_status(request, id):
     task = get_object_or_404(Task, id=id)
+
     # Toggle status
-    task.status = 'Ongoing' if task.status == 'Completed' else 'Completed'
+    if task.status == 'Ongoing':
+        task.status = 'Completed'
+        task.updated_at = now()  # Update timestamp for completion
+    else:
+        task.status = 'Ongoing'
+
     task.save()
-    # Redirect back to the tasks list page (or where you want)
     return redirect('home')
+
 
 # class TaskAPI(APIView):
 #     def get(self,request):
