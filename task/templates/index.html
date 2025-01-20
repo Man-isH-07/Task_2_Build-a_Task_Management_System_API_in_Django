@@ -39,12 +39,12 @@
             font-style: normal;
         }
 
-        .past
-        {
+        .past {
             display: flex;
             justify-content: center;
             align-items: center;
         }
+
         .scolling {
             overflow-y: scroll;
             max-height: 400px;
@@ -72,24 +72,76 @@
             height: 25px;
             gap: 5%;
         }
+
         .makebtnflex img {
             mix-blend-mode: color-burn;
-            width:25px;
+            width: 25px;
             height: 25px;
             gap: 5%;
+        }
+
+        .intro {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            justify-content: space-around;
+            font-size: large;
+
+        }
+
+        .intro a {
+            border: none;
+            background-color: rgb(224, 204, 204);
+            border-radius: 10px;
+            padding: 5px 15px 5px 15px;
+
+        }
+
+        .user {
+            border: 1px solid rgb(255, 241, 215);
+            color: white;
+            background-color: rgb(93, 93, 255);
+            border-radius: 10px;
+            padding: 5px 15px 5px 15px;
+        }
+
+        .add
+        {
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0px 5px 0px 5px;
+        }
+        .date_sch
+        {
+            display: inline-grid;
+            font-weight: bold;
+            height: 80%;
+            width: 60%;
+            padding: 10px 10px 0px 10px;
+            border: none;
+            background-color: rgb(157, 218, 218);
+            border-radius: 20px;
         }
     </Style>
 </head>
 
 <body>
-    <center class="nosifer-regular" style="margin-top: 10px;">
+
+
+    <center class="nosifer-regular" style="margin-top: 5px;">
         <h1>Task Management System</h1>
-        <h6>Manish_Dhaye</h6>
+        <div class="intro mt-4">
+            <h6>Welcome , <span class="user">{{user.first_name}} {{user.last_name}}</span></h6>
+            <a style="text-decoration: none;" href="{% url 'logout_view' %}">Logout</a>
+        </div>
     </center>
     <hr>
 
-    <div style="display: flex; gap: 30px;" class="container mt-3  poppins-medium">
-        <form action="" method="post" class="col-6 mx-auto card p-3 shadow-lg" style="background-color: azure;">
+    <div style="display: flex; gap: 30px;" class="container mt-2  poppins-medium">
+        <form action="" method="post" class="col-6 mx-auto card p-2 shadow-lg" style="background-color: azure;">
             {% csrf_token %}
             <center>
                 <h2><b>Add Task</b></h2>
@@ -106,18 +158,28 @@
                     placeholder="Add Description Here..."></textarea>
             </div>
 
-            <label for="" class="form-label"><b>Task Type :</b></label>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="task_type" value="" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">
-                    Normal
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" name="task_type" type="checkbox" value="" id="flexCheckChecked" checked>
-                <label class="form-check-label" for="flexCheckChecked">
-                    Official
-                </label>
+            <div class="add mb-3">
+                <div class="check">
+                    <label for="" class="form-label"><b>Task Type :</b></label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="task_type" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Normal
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" name="task_type" type="checkbox" value="" id="flexCheckChecked"
+                            checked>
+                        <label class="form-check-label" for="flexCheckChecked">
+                            Official
+                        </label>
+                    </div>
+                </div>
+
+                <div class="date_sch">
+                    <label class="form-label" for="scheduled_date">Scheduled Date (Optional):</label>
+                    <input class="form-control" type="datetime-local" id="scheduled_date" name="scheduled_date"><br><br>
+                </div>
             </div>
 
             <hr>
@@ -181,7 +243,11 @@
         </div>
     </div>
 
-    <div class="col-10 mx-auto card m-4 p-3 shadow-lg poppins-medium past" style="background-color: azure;">
+
+<!-- --------------------------------------------- -->
+ 
+<div style="display: flex; gap: 30px;" class="container mt-2  poppins-medium">
+    <div class="col-6 mx-auto card m-4 shadow-lg poppins-medium p-4" style="background-color: azure;">
         <center>
             <h2><b>Past Completed Tasks</b></h2>
         </center>
@@ -204,7 +270,7 @@
                         <th scope="row">{{ forloop.counter }}</th>
                         <td>{{ task.title }}</td>
                         <td>
-                            <span class="btn btn-success makebtnflex">
+                            <span class="btn btn-success makebtnflex" style="display: flex; gap: 5px;" >
                                 <img src="{% static 'images/completed.png' %}" alt="Completed Icon">
                                 Completed
                             </span>
@@ -212,8 +278,7 @@
                         <td>{{ task.created_at }}</td>
                         <td>{{ task.updated_at }}</td>
                         <td class="makebtnflex">
-                            <a href="/delete/{{ task.id }}" onclick="return confirmDelete();"
-                                class="btn btn-danger">
+                            <a href="/delete/{{ task.id }}" onclick="return confirmDelete();" class="btn btn-danger">
                                 <img src="{% static 'images/deleteicon.png' %}" alt="">
                             </a>
                         </td>
@@ -223,6 +288,48 @@
             </table>
         </div>
     </div>
+
+    <div class="col-6 mx-auto card m-4 shadow-lg poppins-medium p-4" style="background-color: azure;">
+        <center>
+            <h2><b>Scheduled Tasks</b></h2>
+        </center>
+        <hr>
+        <div class="scolling">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Scheduled At</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in scheduled_tasks %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ task.title }}</td>
+                        <td>
+                            <span class="btn btn-warning makebtnflex" style="display: flex; gap: 5px;">
+                                <img src="{% static 'images/schedule.png' %}" alt="Completed Icon">
+                               Scheduled
+                            </span>
+                        </td>
+                        <td>{{ task.scheduled_date }}</td>
+                        <td class="makebtnflex">
+                            <a href="/delete/{{ task.id }}" onclick="return confirmDelete();" class="btn btn-danger">
+                                <img src="{% static 'images/deleteicon.png' %}" alt="">
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+   
 
 
 

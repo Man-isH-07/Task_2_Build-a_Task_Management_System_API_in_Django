@@ -11,8 +11,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Rubik+Wet+Paint&display=swap" rel="stylesheet">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Wellfleet&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Wellfleet&display=swap" rel="stylesheet">
 
 </head>
 
@@ -20,10 +20,10 @@
   /* style.css */
 
   .wellfleet-regular {
-  font-family: "Wellfleet", serif;
-  font-weight: 400;
-  font-style: normal;
-}
+    font-family: "Wellfleet", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
 
 
 
@@ -106,7 +106,7 @@
 
   header {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
   }
 
@@ -478,9 +478,19 @@
         <header>
           <a class="header-logo"><span class="rubik-wet-paint-regular">Task Management System</span></a>
           <a href="/home/" class="hero-bn">Try Now</a>
+          <a style="text-decoration: none;" class="hero-bn" href="{% url 'logout_view' %}">Logout</a>
         </header>
 
-        <center><div class="line" style="border-bottom: 2px solid black; margin-top: 30px; width:80%;"></div>
+        <center>
+          <div class="line" style="border-bottom: 2px solid black; margin-top: 20px; width:80%;"></div>
+        </center>
+
+        <center>
+          <h2 class="rubik-wet-paint-regular" style="color: black; margin-top: 20px;">Welcome , {{user.first_name}}
+            {{user.last_name}}</h2>
+        </center>
+        <center>
+          <div class="line" style="border-bottom: 2px solid black; margin-top: 20px; width:50%;"></div>
         </center>
 
         <div class="hero-content">

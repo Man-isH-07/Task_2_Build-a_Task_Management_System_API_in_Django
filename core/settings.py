@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'task',
+    'django_celery_beat',
+    'django_celery_results',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -75,10 +78,22 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'Task',
+        "USER" : 'postgres',
+        "PASSWORD" : '1111',
+        "PORT" : '5432',
+        "HOST" : 'localhost'
+
     }
 }
 
@@ -130,3 +145,85 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# settings.py# Session Configuration to store session data in Redis
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',  # Connect to Redis database 1
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+# Session timeout (1 day)
+SESSION_COOKIE_AGE = 3600 * 24  # Session expires after 1 day
+
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = '/home/'  # Redirect after login
+LOGOUT_REDIRECT_URL = '/login/'  # Redirect after logout
+
+# settings.py
+
+CELERY_BROKER_URL = 'redis://localhost:6379/1'  # Redis URL
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
+CELERY_TIMEZONE = 'Asia/Kolkata'
+roker_connection_retry_on_startup = True
+# Celery Beat Scheduler
+
+from celery.schedules import crontab
+CELERY_BEAT_SCHEDULE = {
+    'activate-scheduled-tasks': {
+        'task': 'task.tasks.activate_scheduled_tasks',
+        'schedule': crontab(minute='*/1', hour='*'),  
+    },
+    'send_weekly_report': {
+        'task': 'task.tasks.send_weekly_report',
+        'schedule': crontab(minute='*/5', hour='*'),  
+    },
+}
+
+
+
+
+import os
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'core': {  # Make sure to log your custom app (core)
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'formypc770@gmail.com'  # Replace with your email address
+EMAIL_HOST_PASSWORD = 'aktj fzqj kqvw pwmw'    # Replace with your email's app password
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
